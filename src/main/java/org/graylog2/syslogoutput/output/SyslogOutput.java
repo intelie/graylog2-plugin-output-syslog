@@ -35,7 +35,7 @@ public class SyslogOutput implements MessageOutput {
                 Set<Map<String, String>> configuredOutputs = streamConfiguration.get(stream.getId());
 
                 if (configuredOutputs != null) {
-                    for (Map<String, String> config : configuredOutputs) {
+                    for (Map<String, String> ignored : configuredOutputs) {
                         sendSyslog(msg, configuration.get("host"), Integer.parseInt(configuration.get("port")));
                     }
                 }
@@ -53,9 +53,7 @@ public class SyslogOutput implements MessageOutput {
     }
 
     public Map<String, String> getRequestedStreamConfiguration() {
-        Map<String, String> config = new HashMap<String, String>();
-
-        return config;
+        return new HashMap<String, String>();
     }
 
     public String getName() {
@@ -77,9 +75,8 @@ public class SyslogOutput implements MessageOutput {
 
     private void sendSyslog(LogMessage msg, String hostname, Integer port) {
         try {
-            PrintWriter out = null;
             Socket socket = new Socket(hostname, port);
-            out = new PrintWriter(socket.getOutputStream(), true);
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             out.write(msg.getFullMessage());
             out.flush();
             socket.close();
