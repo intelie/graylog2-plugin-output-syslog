@@ -6,7 +6,7 @@
 
     <groupId>org.graylog2.syslog-output</groupId>
     <artifactId>graylog2-output-syslog</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>graylog2-output-syslog</name>
