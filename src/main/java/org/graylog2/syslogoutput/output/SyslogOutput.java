@@ -15,13 +15,15 @@ import java.util.*;
 
 public class SyslogOutput implements MessageOutput {
 
+    public static final String HOST = "host";
+    public static final String PORT = "port";
     private static final String NAME = "Syslog output";
 
     private Map<String, String> configuration;
 
     public static final Set<String> REQUIRED_FIELDS = new HashSet<String>() {{
-        add("host");
-        add("port");
+        add(HOST);
+        add(PORT);
     }};
 
     public void initialize(Map<String, String> configuration) throws MessageOutputConfigurationException {
@@ -30,24 +32,33 @@ public class SyslogOutput implements MessageOutput {
     }
 
     public void write(List<LogMessage> messages, OutputStreamConfiguration streamConfiguration, GraylogServer server) throws Exception {
+        Socket socket = null;
         for (LogMessage msg : messages) {
             for (Stream stream : msg.getStreams()) {
                 Set<Map<String, String>> configuredOutputs = streamConfiguration.get(stream.getId());
 
                 if (configuredOutputs != null) {
                     for (Map<String, String> ignored : configuredOutputs) {
-                        sendSyslog(msg, configuration.get("host"), Integer.parseInt(configuration.get("port")));
+                        if (socket == null) {
+                            socket = new Socket(configuration.get(HOST), Integer.parseInt(configuration.get(PORT)));
+                        }
+                        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                        out.write(msg.getFullMessage());
+                        out.flush();
                     }
                 }
             }
+        }
+        if (socket != null && socket.isConnected()) {
+            socket.close();
         }
     }
 
     public Map<String, String> getRequestedConfiguration() {
         Map<String, String> config = new HashMap<String, String>();
 
-        config.put("host", "Host to redirect syslog");
-        config.put("port", "Port used at host");
+        config.put(HOST, "Host to redirect syslog");
+        config.put(PORT, "Port used at host");
 
         return config;
     }
@@ -73,15 +84,4 @@ public class SyslogOutput implements MessageOutput {
                 && target.get(key) != null && !target.get(key).isEmpty();
     }
 
-    private void sendSyslog(LogMessage msg, String hostname, Integer port) {
-        try {
-            Socket socket = new Socket(hostname, port);
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            out.write(msg.getFullMessage());
-            out.flush();
-            socket.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
 }
