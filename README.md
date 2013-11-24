@@ -1,15 +1,23 @@
 Graylog2 output plugin - Syslog redirect
 =============
 
-Install steps:
+## How to use
 
-    git clone https://github.com/jvrmaia/graylog2-plugin-output-syslog.git
-    cd graylog2-plugin-output-syslog
-    mvn package
-    Ensure *.jar created filename is org.graylog2.syslogoutput.output.SyslogOutput_gl2plugin.jar
-    Copy *.jar to your plugin path of Graylog2
-    In Graylog2-web-interface: Settings > System > Syslog configuration and edit host and port to redirect syslog
-    Configure your stream to use this plugin
+Download org.graylog2.syslogoutput.output.SyslogOutput_gl2plugin.jar and put inside /graylog2/path/plugins/output/.
 
+Restart Graylog2 and configure HOST and PORT to redirect syslog messages.
 
+Associate the plugin to any stream and syslog messages will be redirected.
 
+## Contributing
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
+
+## About current package
+
+* Apache Maven 3.1.1
+* Oracle Java (build 1.7.0_45-b18)
