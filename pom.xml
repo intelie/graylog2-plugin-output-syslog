@@ -6,7 +6,7 @@
 
     <groupId>org.graylog2.syslog-output</groupId>
     <artifactId>graylog2-output-syslog</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>jar</packaging>
 
     <name>graylog2-output-syslog</name>
@@ -28,6 +28,7 @@
             <groupId>org.graylog2</groupId>
             <artifactId>graylog2-plugin</artifactId>
             <version>${graylog-version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
